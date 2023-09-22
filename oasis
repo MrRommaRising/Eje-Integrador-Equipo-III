@@ -1,4 +1,4 @@
-//HTML
+//Archivo Html
 
 <!DOCTYPE html>
 <html>
@@ -10,7 +10,7 @@
   </head>
   <body>
     <main>
-      <div id="container3d"></div>
+      <div id="Scene"></div>
     </main>
      
   <script type="importmap">
@@ -34,36 +34,42 @@
   </body>
 </html>
 
-  //Script
 
+//Inicio del Oasis
+//importar controles y objetos 3D
 import * as THREE from 'three';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+//Declarar variables
 let camera, scene, renderer, controls;
 
 function init() {
-  // Crear el contenedor
-  const container = document.createElement('div');
-  container.id = 'container3d'; // Asigna un ID para usarlo más tarde
+
+// Crear el contenedor
+const container = document.createElement('div');
+  container.id = 'Scene'; // Asigna un ID para usarlo más tarde
   document.body.appendChild(container);
 
   // Configurar la escena
   scene = new THREE.Scene();
   
-  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+  camera = new THREE.PerspectiveCamera(60, 
+  window.innerWidth / window.innerHeight, 1, 10000);
   camera.position.z = 5;
   camera.position.y = 2;
   camera.lookAt(0, 0, 0);
 
   // Configurar el renderer
   renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(window.innerWidth, 
+  window.innerHeight);
   renderer.setClearColor(0xaaaaaa, 1);
   container.appendChild(renderer.domElement);
 
   // Configurar los controles
-  controls = new FlyControls(camera, renderer.domElement);
+  controls = new FlyControls(camera, 
+  renderer.domElement);
   controls.movementSpeed = 100;
   controls.rollSpeed = Math.PI / 24;
   controls.autoForward = false;
@@ -72,9 +78,9 @@ function init() {
   // Cargar el modelo GLTF
   const loader = new GLTFLoader();
   loader.load('/OasisOmar/cubo.glb', function (gltf) {
-    scene.add(gltf.scene);
-  }, undefined, function (error) {
-    console.error(error);
+  scene.add(gltf.scene); },undefined, function 
+  (error) {
+  console.error(error);
   });
 
   // Configurar el reloj y comenzar el renderizado
@@ -86,6 +92,7 @@ function init() {
     controls.update(delta);
     requestAnimationFrame(render);
   }
-
-  render(); // Iniciar el renderizado
+  // Iniciar el renderizado
+  render();
 }
+  init();
