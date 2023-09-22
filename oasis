@@ -1,0 +1,91 @@
+//HTML
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>1.js app</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <main>
+      <div id="container3d"></div>
+    </main>
+     
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.140.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.140.0/examples/jsm/"
+    }
+  }
+    
+</script>
+  <script src="1.js" type="module"></script>
+    
+
+    <!--
+    This script places a badge on your repl's full-browser view back to your repl's cover  
+    page. Try various colors for the theme: dark, light, red, orange, yellow, lime, green,
+    teal, blue, blurple, magenta, pink!
+    -->
+    <script src="https://replit.com/public/js/replit-badge.js" theme="blue" defer></script> 
+  </body>
+</html>
+
+  //Script
+
+import * as THREE from 'three';
+import { FlyControls } from 'three/addons/controls/FlyControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+let camera, scene, renderer, controls;
+
+function init() {
+  // Crear el contenedor
+  const container = document.createElement('div');
+  container.id = 'container3d'; // Asigna un ID para usarlo más tarde
+  document.body.appendChild(container);
+
+  // Configurar la escena
+  scene = new THREE.Scene();
+  
+  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+  camera.position.z = 5;
+  camera.position.y = 2;
+  camera.lookAt(0, 0, 0);
+
+  // Configurar el renderer
+  renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0xaaaaaa, 1);
+  container.appendChild(renderer.domElement);
+
+  // Configurar los controles
+  controls = new FlyControls(camera, renderer.domElement);
+  controls.movementSpeed = 100;
+  controls.rollSpeed = Math.PI / 24;
+  controls.autoForward = false;
+  controls.dragToLook = false;
+
+  // Cargar el modelo GLTF
+  const loader = new GLTFLoader();
+  loader.load('/OasisOmar/cubo.glb', function (gltf) {
+    scene.add(gltf.scene);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+
+  // Configurar el reloj y comenzar el renderizado
+  const clock = new THREE.Clock();
+
+  function render() {
+    const delta = clock.getDelta();
+    renderer.render(scene, camera);
+    controls.update(delta);
+    requestAnimationFrame(render);
+  }
+
+  render(); // Iniciar el renderizado
+}
